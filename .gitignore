@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+venv/
+*.pyc
+
+# Project Specific
+*.pcap
+*.pcapng
+*.sqlite3
+.env
