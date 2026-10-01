@@ -1,8 +1,38 @@
 import sqlite3
 from pathlib import Path
+from typing import List
+from models import AccessPoint
 
 # We store the database file right next to this script
 DB_PATH = Path(__file__).parent / "wifgyan.sqlite3"
+
+def save_scan_results(access_points: List[AccessPoint]):
+    """
+    Saves a list of AccessPoint objects into the database.
+    Updates the networks table if it's a new network,
+    and always adds a new row to the observations table.
+    """
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        
+        for ap in access_points:
+            # 1. Insert or Ignore into 'networks'
+            # We use INSERT OR IGNORE because the BSSID is the primary key.
+            # If the router is already in the database, it won't crash; it just skips this step.
+            cursor.execute("""
+                INSERT OR IGNORE INTO networks (bssid, ssid, authentication, encryption, band)
+                VALUES (?, ?, ?, ?, ?)
+            """, (ap.bssid, ap.ssid, ap.authentication, ap.encryption, ap.band))
+            
+            # 2. Insert into 'observations'
+            # We always want a new row here to track the signal strength at this exact moment in time.
+            cursor.execute("""
+                INSERT INTO observations (bssid, signal_percent, channel)
+                VALUES (?, ?, ?)
+            """, (ap.bssid, ap.signal_percent, ap.channel))
+            
+        conn.commit()
+        print(f"Successfully saved {len(access_points)} Access Points to the database.")
 
 def init_db():
     """

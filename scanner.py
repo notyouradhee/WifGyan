@@ -1,5 +1,6 @@
 import subprocess
 from models import AccessPoint
+import database
 
 def get_netsh_output() -> str:
     """Executes the Windows netsh command and returns the raw output."""
@@ -75,9 +76,15 @@ def parse_netsh_output(raw_text: str) -> list[AccessPoint]:
     return access_points
 
 if __name__ == "__main__":
+    # Ensure the database tables are created before scanning
+    database.init_db()
+    
     raw_text = get_netsh_output()
     scanned_data = parse_netsh_output(raw_text)
     
     for ap in scanned_data:
         print(f"Network: {ap.ssid} ({ap.authentication})")
         print(f"  -> BSSID: {ap.bssid} | Signal: {ap.signal_percent}% ({ap.estimated_dbm} dBm) | Ch: {ap.channel} | Band: {ap.band}")
+
+    # Save the parsed data to our SQLite database
+    database.save_scan_results(scanned_data)
