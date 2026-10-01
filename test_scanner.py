@@ -21,11 +21,13 @@ def test_parse_netsh_output():
     assert first_ap.channel == 36
     assert first_ap.band == "5 GHz"
     assert first_ap.security_status == "Secure (WPA2)"
+    assert first_ap.vendor == "Test Vendor / Mock"
     
     # Check the second AP specifically (iptime - Open network)
     second_ap = access_points[1]
     assert second_ap.ssid == "iptime"
     assert second_ap.security_status == "Insecure (Open Network)"
+    assert second_ap.vendor == "EFM Networks (ipTIME)"
     
     print("✓ All tests passed! The parser correctly read the AccessPoint.")
     

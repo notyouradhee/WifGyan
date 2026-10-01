@@ -84,7 +84,7 @@ if __name__ == "__main__":
     
     for ap in scanned_data:
         print(f"Network: {ap.ssid} | Security: {ap.security_status}")
-        print(f"  -> BSSID: {ap.bssid} | Auth: {ap.authentication} | Enc: {ap.encryption}")
+        print(f"  -> BSSID: {ap.bssid} ({ap.vendor}) | Auth: {ap.authentication} | Enc: {ap.encryption}")
         print(f"  -> Signal: {ap.signal_percent}% ({ap.estimated_dbm} dBm) | Ch: {ap.channel} | Band: {ap.band}\n")
 
     # Save the parsed data to our SQLite database

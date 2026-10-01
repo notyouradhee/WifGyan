@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import vendors
 
 @dataclass
 class AccessPoint:
@@ -12,6 +13,11 @@ class AccessPoint:
     network_type: str = ""
     radio_type: str = ""
     
+    @property
+    def vendor(self) -> str:
+        """Returns the manufacturer name based on the BSSID's OUI."""
+        return vendors.get_vendor(self.bssid)
+
     @property
     def estimated_dbm(self) -> int:
         """Derive an estimated dBm from signal percentage: (percent / 2) - 100"""
