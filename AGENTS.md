@@ -28,20 +28,11 @@ built as a cybersecurity/Python/data-science portfolio project.
 
 ## Current phase
 
-**Phase 1 (MVP), Step 1: parser.**
-Build an `AccessPoint` dataclass and a `parse_netsh_output()` function that
-turns the text from `netsh wlan show networks mode=bssid` into structured
-Python objects, tested against a real saved scan (`samples/scan_01.txt`).
+**Phase 2, Step 1: PCAP parsing and analysis.**
+Phase 1 (MVP) is fully complete (Scanner, Database, Models, Security classification, OUI lookup). 
+We are now jumping into Phase 2: importing and analyzing `.pcap` / `.pcapng` files.
 
-Confirmed real-world fields to parse: SSID, Network type, Authentication,
-Encryption, BSSID, Signal (%), Radio type, Band, Channel, and an optional
-Bss Load block (Connected Stations, Channel Utilization, Medium Available
-Capacity) — not every AP broadcasts Bss Load, so those fields must be
-nullable. BSSID is the unique identity for an access point, not SSID.
-Signal is a percentage; derive an estimated dBm as `(percent / 2) - 100`
-and label it clearly as an estimate.
-
-**Do not** start SQLite, FastAPI, the UI, or packet capture yet.
+The immediate goal is to build a basic parser that can read a packet capture file, count the total packets, and identify 802.11 frames (Management, Control, Data) without building out the UI or active capture yet.
 
 ## Hardware
 

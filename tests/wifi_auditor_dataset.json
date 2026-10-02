@@ -1,0 +1,18 @@
+[
+  {
+    "id": "audit_test_01",
+    "task": "Run a security audit for the local Wi-Fi environment based on the database and write a report.",
+    "evaluation_criteria": {
+      "must_contain_exact_strings": [
+        "35",
+        "16",
+        "VPN"
+      ],
+      "must_address_concepts": [
+        "Insecure networks (Open/WEP)",
+        "Randomized or Locally Administered MAC Addresses",
+        "Actionable recommendations for the user"
+      ]
+    }
+  }
+]
