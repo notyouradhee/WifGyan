@@ -28,11 +28,11 @@ built as a cybersecurity/Python/data-science portfolio project.
 
 ## Current phase
 
-**Phase 2, Step 1: PCAP parsing and analysis.**
-Phase 1 (MVP) is fully complete (Scanner, Database, Models, Security classification, OUI lookup). 
-We are now jumping into Phase 2: importing and analyzing `.pcap` / `.pcapng` files.
+**Phase 3, Step 1: FastAPI Backend Dashboard.**
+Phase 1 (Scanner/DB) and Phase 2 (PCAP analysis) are fully complete!
+We are now jumping into Phase 3: building the FastAPI web backend.
 
-The immediate goal is to build a basic parser that can read a packet capture file, count the total packets, and identify 802.11 frames (Management, Control, Data) without building out the UI or active capture yet.
+The immediate goal is to set up a `FastAPI` server that reads from our `wifgyan.sqlite3` database and serves JSON endpoints (like `/api/networks`). This will act as the bridge between our Python security scripts and the future React/Tauri desktop UI.
 
 ## Hardware
 
