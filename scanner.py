@@ -1,9 +1,54 @@
 import subprocess
+import time
 from models import AccessPoint
 import database
 
-def get_netsh_output() -> str:
-    """Executes the Windows netsh command and returns the raw output."""
+def trigger_hardware_scan() -> None:
+    """Forces the Windows Wi-Fi adapter to broadcast active 802.11 probe requests via wlanapi.dll."""
+    try:
+        import ctypes
+        import ctypes.wintypes
+
+        wlanapi = ctypes.windll.wlanapi
+        client_handle = ctypes.wintypes.HANDLE()
+        negotiated_version = ctypes.wintypes.DWORD()
+        
+        # Open handle to Windows WLAN service
+        ret = wlanapi.WlanOpenHandle(2, None, ctypes.byref(negotiated_version), ctypes.byref(client_handle))
+        if ret != 0:
+            return
+
+        class WLAN_INTERFACE_INFO(ctypes.Structure):
+            _fields_ = [
+                ('InterfaceGuid', ctypes.c_byte * 16),
+                ('strInterfaceDescription', ctypes.c_wchar * 256),
+                ('isState', ctypes.c_uint)
+            ]
+
+        class WLAN_INTERFACE_INFO_LIST(ctypes.Structure):
+            _fields_ = [
+                ('dwNumberOfItems', ctypes.wintypes.DWORD),
+                ('dwIndex', ctypes.wintypes.DWORD),
+                ('InterfaceInfo', WLAN_INTERFACE_INFO * 1)
+            ]
+
+        pInterfaceList = ctypes.POINTER(WLAN_INTERFACE_INFO_LIST)()
+        ret = wlanapi.WlanEnumInterfaces(client_handle, None, ctypes.byref(pInterfaceList))
+        if ret == 0 and pInterfaceList.contents.dwNumberOfItems > 0:
+            guid = pInterfaceList.contents.InterfaceInfo[0].InterfaceGuid
+            # Command physical adapter to actively scan all Wi-Fi channels
+            wlanapi.WlanScan(client_handle, ctypes.byref(guid), None, None, None)
+            time.sleep(2.5)  # Wait for radio responses
+
+        wlanapi.WlanCloseHandle(client_handle, None)
+    except Exception:
+        pass
+
+def get_netsh_output(active_scan: bool = True) -> str:
+    """Executes an active probe scan and returns the raw netsh output."""
+    if active_scan:
+        trigger_hardware_scan()
+        
     result = subprocess.run(
         ["netsh", "wlan", "show", "networks", "mode=bssid"], 
         capture_output=True, 
