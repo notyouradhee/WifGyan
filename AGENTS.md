@@ -28,11 +28,11 @@ built as a cybersecurity/Python/data-science portfolio project.
 
 ## Current phase
 
-**Phase 3, Step 1: FastAPI Backend Dashboard.**
-Phase 1 (Scanner/DB) and Phase 2 (PCAP analysis) are fully complete!
-We are now jumping into Phase 3: building the FastAPI web backend.
+**Phase 3, Step 3: Rogue AP & Evil Twin Detection.**
+Phase 1 (Scanner/DB), Phase 2 (PCAP analysis), and Phase 3 Steps 1 & 2 (FastAPI Backend + Web Dashboard UI) are fully complete!
+The web dashboard is live and operational at `http://localhost:8000`.
 
-The immediate goal is to set up a `FastAPI` server that reads from our `wifgyan.sqlite3` database and serves JSON endpoints (like `/api/networks`). This will act as the bridge between our Python security scripts and the future React/Tauri desktop UI.
+The next goal is building Phase 3.3: Rogue AP and Evil Twin detection logic (detecting duplicate SSIDs with mismatched encryption, differing BSSID OUIs, or sudden signal spikes).
 
 ## Hardware
 
